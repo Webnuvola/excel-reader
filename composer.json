@@ -14,12 +14,24 @@
   ],
   "require": {
     "php": "^7.4",
-    "box/spout": "^2.7|^3.0"
+    "box/spout": "^2.7|^3.0",
+    "cocur/slugify": "^4.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
   },
   "autoload": {
     "psr-4": {
       "Webnuvola\\ExcelReader\\": "src"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Webnuvola\\ExcelReader\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit --testdox"
   },
   "config": {
     "optimize-autoloader": true,
