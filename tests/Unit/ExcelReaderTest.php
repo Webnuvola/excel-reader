@@ -88,6 +88,37 @@ class ExcelReaderTest extends TestCase
             new DateTime('2014-01-01 00:00:00.000000'), 1, 'January', '2014',
         ], $excel[1]);
 
+        $this->assertEquals(range(0, 15), array_keys($excel[0]));
+
         $this->assertCount(701, $excel);
+    }
+
+    /** @test */
+    public function read_second_sheet()
+    {
+        $excelReader = ExcelReader::createFromFile(__DIR__.'/../resources/users.xlsx');
+
+        $sheet1 = $excelReader->read();
+        $this->assertEquals([], $sheet1);
+
+        $sheet2 = $excelReader->sheet(1)->read();
+
+        $this->assertEquals([
+            'first-name', 'last-name', 'gender', 'country',
+            'age', 'date', 'id',
+        ], array_keys($sheet2[0]));
+
+        $this->assertEquals([
+            'Dulce', 'Abril', 'Female', 'United States',
+            32, '15/10/2017', 1562,
+        ], array_values($sheet2[0]));
+
+        $this->assertCount(100, $sheet2);
+
+        $sheetByName = ExcelReader::createFromFile(__DIR__.'/../resources/users.xlsx')
+            ->sheet('Sheet2')
+            ->read();
+
+        $this->assertEquals($sheet2, $sheetByName);
     }
 }
