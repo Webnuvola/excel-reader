@@ -4,10 +4,31 @@ namespace Webnuvola\ExcelReader\Tests\Unit;
 
 use DateTime;
 use Webnuvola\ExcelReader\ExcelReader;
+use Webnuvola\ExcelReader\ExcelReaderManager;
+use Webnuvola\ExcelReader\Libraries\BoxSpout2Library;
+use Webnuvola\ExcelReader\Libraries\BoxSpout3Library;
 use Webnuvola\ExcelReader\Tests\TestCase;
 
 class ExcelReaderTest extends TestCase
 {
+    /**
+     * @test
+     * @doesNotPerformAssertions
+     */
+    public function library()
+    {
+        $library = ExcelReaderManager::resolve();
+
+        if ($library instanceof BoxSpout3Library) {
+            $this->setName('Library box/spout:^3.0');
+        } elseif ($library instanceof BoxSpout2Library) {
+            $this->setName('Library box/spout:^2.7');
+        } else {
+            $this->setName('Library not found');
+            $this->markTestIncomplete('Library not found');
+        }
+    }
+
     /** @test */
     public function read_file_with_headers()
     {
