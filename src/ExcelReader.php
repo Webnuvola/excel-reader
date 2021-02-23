@@ -2,6 +2,8 @@
 
 namespace Webnuvola\ExcelReader;
 
+use Webnuvola\ExcelReader\File\FileFactory;
+use Webnuvola\ExcelReader\File\FileInterface;
 use Webnuvola\ExcelReader\Libraries\LibraryInterface;
 
 final class ExcelReader
@@ -16,9 +18,9 @@ final class ExcelReader
     /**
      * Excel file path.
      *
-     * @var string
+     * @var \Webnuvola\ExcelReader\File\FileInterface
      */
-    protected string $path;
+    protected FileInterface $file;
 
     /**
      * First row as headers.
@@ -44,14 +46,12 @@ final class ExcelReader
     /**
      * ExcelReader constructor.
      *
-     * @param  string $path
-     *
-     * @throws \Webnuvola\ExcelReader\Exceptions\LibraryNotFoundException
+     * @param  \Webnuvola\ExcelReader\File\FileInterface $file
      */
-    public function __construct(string $path)
+    public function __construct(FileInterface $file)
     {
+        $this->file = $file;
         $this->library = ExcelReaderManager::resolve();
-        $this->path = $path;
     }
 
     /**
@@ -60,11 +60,34 @@ final class ExcelReader
      * @param  string $path
      * @return static
      *
-     * @throws \Webnuvola\ExcelReader\Exceptions\LibraryNotFoundException
+     * @deprecated Use createFromPath instead
      */
     public static function createFromFile(string $path): self
     {
-        return new self($path);
+        return self::createFromPath($path);
+    }
+
+    /**
+     * Create ExcelReader from path.
+     *
+     * @param  string $path
+     * @return static
+     */
+    public static function createFromPath(string $path): self
+    {
+        return new self(FileFactory::createFromPath($path));
+    }
+
+    /**
+     * Create ExcelReader from string.
+     *
+     * @param  string $content
+     * @param  string $extension
+     * @return static
+     */
+    public static function createFromString(string $content, string $extension): self
+    {
+        return new self(FileFactory::createFromString($content, $extension));
     }
 
     /**
@@ -125,7 +148,7 @@ final class ExcelReader
     public function read(): array
     {
         if (! isset($this->data[$this->sheet])) {
-            $this->data[$this->sheet] = $this->library->read($this->path, $this->headers, $this->sheet);
+            $this->data[$this->sheet] = $this->library->read($this->file->getPath(), $this->headers, $this->sheet);
         }
 
         return $this->data[$this->sheet];

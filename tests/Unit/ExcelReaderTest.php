@@ -32,7 +32,7 @@ class ExcelReaderTest extends TestCase
     /** @test */
     public function read_file_with_headers()
     {
-        $excel = ExcelReader::createFromFile(__DIR__.'/../resources/financial.xlsx')
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/financial.xlsx')
             ->read();
 
         $this->assertEquals([
@@ -55,7 +55,7 @@ class ExcelReaderTest extends TestCase
     /** @test */
     public function read_file_with_headers_verbose()
     {
-        $excel = ExcelReader::createFromFile(__DIR__.'/../resources/financial.xlsx')
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/financial.xlsx')
             ->withHeaders()
             ->read();
 
@@ -70,7 +70,7 @@ class ExcelReaderTest extends TestCase
     /** @test */
     public function read_file_without_headers()
     {
-        $excel = ExcelReader::createFromFile(__DIR__.'/../resources/financial.xlsx')
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/financial.xlsx')
             ->withoutHeaders()
             ->read();
 
@@ -96,7 +96,7 @@ class ExcelReaderTest extends TestCase
     /** @test */
     public function read_second_sheet()
     {
-        $excelReader = ExcelReader::createFromFile(__DIR__.'/../resources/users.xlsx');
+        $excelReader = ExcelReader::createFromPath(__DIR__.'/../resources/users.xlsx');
 
         $sheet1 = $excelReader->read();
         $this->assertEquals([], $sheet1);
@@ -115,10 +115,23 @@ class ExcelReaderTest extends TestCase
 
         $this->assertCount(100, $sheet2);
 
-        $sheetByName = ExcelReader::createFromFile(__DIR__.'/../resources/users.xlsx')
+        $sheetByName = ExcelReader::createFromPath(__DIR__.'/../resources/users.xlsx')
             ->sheet('Sheet2')
             ->read();
 
         $this->assertEquals($sheet2, $sheetByName);
+    }
+
+    /** @test */
+    public function read_file_from_string()
+    {
+        $fp = fopen(__DIR__.'/../resources/financial.xlsx', 'rb');
+        $content = stream_get_contents($fp);
+        fclose($fp);
+
+        $excel = ExcelReader::createFromString($content, 'xlsx')
+            ->read();
+
+        $this->assertCount(700, $excel);
     }
 }
