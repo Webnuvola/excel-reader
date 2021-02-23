@@ -13,7 +13,10 @@ composer require webnuvola/excel-reader
 
 ## Usage
 ```php
-$excel = \Webnuvola\ExcelReader\ExcelReader::createFromFile(__DIR__.'/excel-file.xlsx')
+$excel = \Webnuvola\ExcelReader\ExcelReader::createFromPath(__DIR__.'/excel-file.xlsx')
+    ->read();
+
+$excel = \Webnuvola\ExcelReader\ExcelReader::createFromString($content, 'xlsx')
     ->read();
 ```
 
