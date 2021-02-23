@@ -30,6 +30,8 @@ class BoxSpout2Library implements LibraryInterface
         $function = is_int($sheetId) ? 'getIndex' : 'getName';
 
         $headers = [];
+        $headersCount = 0;
+        $filler = [];
         $data = [];
 
         $slugify = $hasHeaders ? new Slugify() : null;
@@ -47,11 +49,20 @@ class BoxSpout2Library implements LibraryInterface
                 if ($first) {
                     $headers = array_map(static fn ($cell) => $slugify->slugify($cell), $row);
 
+                    $headersCount = count($headers);
+                    $filler = array_fill(0, $headersCount, null);
+
                     $first = false;
                     continue;
                 }
 
-                $data[] = $row;
+                $currentData = $row + $filler;
+
+                if ($hasHeaders && count($currentData) > $headersCount) {
+                    $currentData = array_slice($currentData, 0, $headersCount);
+                }
+
+                $data[] = $currentData;
             }
 
             break;

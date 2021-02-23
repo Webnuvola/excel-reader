@@ -41,9 +41,9 @@ class FileTest extends TestCase
         $file = FileFactory::createFromString(self::$excelContent, 'xlsx');
 
         $path = $file->getPath();
-        $this->assertTrue(file_exists($path));
+        $this->assertFileExists($path);
 
         unset($file);
-        $this->assertFalse(file_exists($path));
+        $this->assertFileDoesNotExist($path);
     }
 }

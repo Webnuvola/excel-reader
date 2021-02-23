@@ -3,6 +3,7 @@
 namespace Webnuvola\ExcelReader\Tests\Unit;
 
 use DateTime;
+use RuntimeException;
 use Webnuvola\ExcelReader\ExcelReader;
 use Webnuvola\ExcelReader\ExcelReaderManager;
 use Webnuvola\ExcelReader\Libraries\BoxSpout2Library;
@@ -133,5 +134,31 @@ class ExcelReaderTest extends TestCase
             ->read();
 
         $this->assertCount(700, $excel);
+    }
+
+    /** @test */
+    public function malformed_table_with_headers()
+    {
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/malformed-table.xlsx')
+            ->read();
+
+        $this->assertEquals([
+            ['column-a' => 'Value A1', 'column-b' => 'Value B1', 'column-c' => 'Value C1', 'column-d' => 'Value D1'],
+            ['column-a' => 'Value A2', 'column-b' => 'Value B2', 'column-c' => 'Value C2', 'column-d' => null],
+        ], $excel);
+    }
+
+    /** @test */
+    public function malformed_table_without_headers()
+    {
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/malformed-table.xlsx')
+            ->withoutHeaders()
+            ->read();
+
+        $this->assertEquals([
+            ['Column A', 'Column B', 'Column C', 'Column D'],
+            ['Value A1', 'Value B1', 'Value C1', 'Value D1', 'Value E1'],
+            ['Value A2', 'Value B2', 'Value C2'],
+        ], $excel);
     }
 }

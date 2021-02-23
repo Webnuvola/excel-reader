@@ -28,14 +28,17 @@ class BoxSpout3Library implements LibraryInterface
         $function = is_int($sheetId) ? 'getIndex' : 'getName';
 
         $headers = [];
+        $headersCount = 0;
+        $filler = [];
         $data = [];
+
+        $slugify = $hasHeaders ? new Slugify() : null;
 
         foreach ($reader->getSheetIterator() as $sheet) {
             if ($sheet->$function() !== $sheetId) {
                 continue;
             }
 
-            $slugify = new Slugify();
             $first = $hasHeaders;
 
             /** @var \Box\Spout\Common\Entity\Row $row */
@@ -47,14 +50,23 @@ class BoxSpout3Library implements LibraryInterface
                         $row->getCells(),
                     );
 
+                    $headersCount = count($headers);
+                    $filler = array_fill(0, $headersCount, null);
+
                     $first = false;
                     continue;
                 }
 
-                $data[] = array_map(
-                    static fn (Cell $cell) => $cell->getValue(),
-                    $row->getCells(),
-                );
+                $currentData = array_map(
+                        static fn (Cell $cell) => $cell->getValue(),
+                        $row->getCells(),
+                    ) + $filler;
+
+                if ($hasHeaders && count($currentData) > $headersCount) {
+                    $currentData = array_slice($currentData, 0, $headersCount);
+                }
+
+                $data[] = $currentData;
             }
 
             break;
