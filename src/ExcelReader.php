@@ -141,6 +141,19 @@ final class ExcelReader
     }
 
     /**
+     * Set slugify settings.
+     *
+     * @param  array $settings
+     * @return $this
+     */
+    public function slugify(array $settings): self
+    {
+        $this->library->slugify($settings);
+
+        return $this;
+    }
+
+    /**
      * Read the file and return data from selected sheet.
      *
      * @return array

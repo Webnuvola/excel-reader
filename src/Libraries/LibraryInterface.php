@@ -13,4 +13,11 @@ interface LibraryInterface
      * @return array
      */
     public function read(string $path, bool $hasHeaders, $sheetId): array;
+
+    /**
+     * Set slugify settings.
+     *
+     * @param  array $settings
+     */
+    public function slugify(array $settings): void;
 }

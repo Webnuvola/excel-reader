@@ -161,4 +161,19 @@ class ExcelReaderTest extends TestCase
             ['Value A2', 'Value B2', 'Value C2'],
         ], $excel);
     }
+
+    /** @test */
+    public function slugify_settings()
+    {
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/financial.xlsx')
+            ->slugify(['separator' => '_'])
+            ->read();
+
+        $this->assertEquals([
+            'segment', 'country', 'product', 'discount_band',
+            'units_sold', 'manufacturing_price', 'sale_price', 'gross_sales',
+            'discounts', 'sales', 'cogs', 'profit',
+            'date', 'month_number', 'month_name', 'year',
+        ], array_keys($excel[0]));
+    }
 }

@@ -6,7 +6,7 @@ use Box\Spout\Common\Entity\Cell;
 use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Cocur\Slugify\Slugify;
 
-class BoxSpout3Library implements LibraryInterface
+class BoxSpout3Library extends Library implements LibraryInterface
 {
     /**
      * Read the file and return data from selected sheet.
@@ -32,7 +32,7 @@ class BoxSpout3Library implements LibraryInterface
         $filler = [];
         $data = [];
 
-        $slugify = $hasHeaders ? new Slugify() : null;
+        $slugify = $hasHeaders ? new Slugify($this->slugifySettings) : null;
 
         foreach ($reader->getSheetIterator() as $sheet) {
             if ($sheet->$function() !== $sheetId) {

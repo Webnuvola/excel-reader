@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to `excel-reader` will be documented in this file.
 
+## v1.2 - 2021-09-08
+- Add `slugify` method to define settings for generating slugs for column headers
+
 ## v1.1.1 - 2021-02-23
 - Fix for malformed tables
 
