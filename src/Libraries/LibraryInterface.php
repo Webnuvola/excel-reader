@@ -20,4 +20,25 @@ interface LibraryInterface
      * @param  array $settings
      */
     public function slugify(array $settings): void;
+
+    /**
+     * Set rows to be skipped.
+     *
+     * @param  int $rows
+     */
+    public function skip(int $rows): void;
+
+    /**
+     * Set if empty rows should be preserved.
+     *
+     * @param  bool $preserve
+     */
+    public function preserveEmptyRows(bool $preserve): void;
+
+    /**
+     * Return library version.
+     *
+     * @return int
+     */
+    public function version(): int;
 }

@@ -23,6 +23,7 @@ class BoxSpout3Library extends Library implements LibraryInterface
     public function read(string $path, bool $hasHeaders, $sheetId): array
     {
         $reader = ReaderFactory::createFromFile($path);
+        $reader->setShouldPreserveEmptyRows($this->preserveEmptyRows);
         $reader->open($path);
 
         $function = is_int($sheetId) ? 'getIndex' : 'getName';
@@ -32,19 +33,23 @@ class BoxSpout3Library extends Library implements LibraryInterface
         $filler = [];
         $data = [];
 
+        $first = $hasHeaders;
         $slugify = $hasHeaders ? new Slugify($this->slugifySettings) : null;
+        $skipped = 0;
 
         foreach ($reader->getSheetIterator() as $sheet) {
             if ($sheet->$function() !== $sheetId) {
                 continue;
             }
 
-            $first = $hasHeaders;
-
             /** @var \Box\Spout\Common\Entity\Row $row */
             foreach ($sheet->getRowIterator() as $row) {
-                if ($first) {
+                if ($skipped < $this->skip) {
+                    $skipped++;
+                    continue;
+                }
 
+                if ($first) {
                     $headers = array_map(
                         static fn (Cell $cell) => $slugify->slugify($cell->getValue()),
                         $row->getCells(),
@@ -77,5 +82,15 @@ class BoxSpout3Library extends Library implements LibraryInterface
         }
 
         return array_map(static fn ($values) => array_combine($headers, $values), $data);
+    }
+
+    /**
+     * Return library version.
+     *
+     * @return int
+     */
+    public function version(): int
+    {
+        return 3;
     }
 }

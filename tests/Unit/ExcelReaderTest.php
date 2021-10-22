@@ -3,7 +3,7 @@
 namespace Webnuvola\ExcelReader\Tests\Unit;
 
 use DateTime;
-use RuntimeException;
+use Exception;
 use Webnuvola\ExcelReader\ExcelReader;
 use Webnuvola\ExcelReader\ExcelReaderManager;
 use Webnuvola\ExcelReader\Libraries\BoxSpout2Library;
@@ -105,8 +105,7 @@ class ExcelReaderTest extends TestCase
         $sheet2 = $excelReader->sheet(1)->read();
 
         $this->assertEquals([
-            'first-name', 'last-name', 'gender', 'country',
-            'age', 'date', 'id',
+            'first-name', 'last-name', 'gender', 'country', 'age', 'date', 'id',
         ], array_keys($sheet2[0]));
 
         $this->assertEquals([
@@ -175,5 +174,44 @@ class ExcelReaderTest extends TestCase
             'discounts', 'sales', 'cogs', 'profit',
             'date', 'month_number', 'month_name', 'year',
         ], array_keys($excel[0]));
+    }
+
+    /** @test */
+    public function skip_rows()
+    {
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/skip.xlsx')
+            ->skip(3)
+            ->read();
+
+        $this->assertEquals([
+            'first-name', 'last-name', 'gender', 'country', 'age', 'date', 'id',
+        ], array_keys($excel[0]));
+    }
+
+    /** @test */
+    public function preserve_empty_rows()
+    {
+        if (ExcelReader::version() === 2) {
+            $this->expectException(Exception::class);
+
+            ExcelReader::createFromPath(__DIR__.'/../resources/empty-rows.xlsx')
+                ->withoutHeaders()
+                ->preserveEmptyRows(false)
+                ->read();
+        }
+
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/empty-rows.xlsx')
+            ->withoutHeaders()
+            ->preserveEmptyRows(true)
+            ->read();
+
+        $this->assertCount(15, $excel);
+
+        $excel = ExcelReader::createFromPath(__DIR__.'/../resources/empty-rows.xlsx')
+            ->withoutHeaders()
+            ->preserveEmptyRows(false)
+            ->read();
+
+        $this->assertCount(6, $excel);
     }
 }

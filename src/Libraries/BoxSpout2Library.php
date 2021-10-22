@@ -2,9 +2,9 @@
 
 namespace Webnuvola\ExcelReader\Libraries;
 
-use Box\Spout\Common\Type;
 use Box\Spout\Reader\ReaderFactory;
 use Cocur\Slugify\Slugify;
+use Exception;
 
 class BoxSpout2Library extends Library implements LibraryInterface
 {
@@ -34,7 +34,9 @@ class BoxSpout2Library extends Library implements LibraryInterface
         $filler = [];
         $data = [];
 
+        $first = $hasHeaders;
         $slugify = $hasHeaders ? new Slugify($this->slugifySettings) : null;
+        $skipped = 0;
 
         /** @var \Box\Spout\Reader\SheetInterface $sheet */
         foreach ($reader->getSheetIterator() as $sheet) {
@@ -42,10 +44,13 @@ class BoxSpout2Library extends Library implements LibraryInterface
                 continue;
             }
 
-            $first = $hasHeaders;
-
             /** @var array $row */
             foreach ($sheet->getRowIterator() as $row) {
+                if ($skipped < $this->skip) {
+                    $skipped++;
+                    continue;
+                }
+
                 if ($first) {
                     $headers = array_map(static fn ($cell) => $slugify->slugify($cell), $row);
 
@@ -73,5 +78,25 @@ class BoxSpout2Library extends Library implements LibraryInterface
         }
 
         return array_map(static fn ($values) => array_combine($headers, $values), $data);
+    }
+
+    /**
+     * Return library version.
+     *
+     * @return int
+     */
+    public function version(): int
+    {
+        return 2;
+    }
+
+    /**
+     * Set if empty rows should be preserved.
+     *
+     * @param  bool $preserve
+     */
+    public function preserveEmptyRows(bool $preserve): void
+    {
+        throw new Exception('preserveEmptyRows is supported only in box/spout:^3.0');
     }
 }

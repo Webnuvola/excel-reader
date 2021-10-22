@@ -91,6 +91,16 @@ final class ExcelReader
     }
 
     /**
+     * Return library version.
+     *
+     * @return int
+     */
+    public static function version(): int
+    {
+        return ExcelReaderManager::resolve()->version();
+    }
+
+    /**
      * Set first row as header.
      *
      * @param  bool $value
@@ -149,6 +159,32 @@ final class ExcelReader
     public function slugify(array $settings): self
     {
         $this->library->slugify($settings);
+
+        return $this;
+    }
+
+    /**
+     * Set rows to be skipped.
+     *
+     * @param  int $rows
+     * @return $this
+     */
+    public function skip(int $rows): self
+    {
+        $this->library->skip($rows);
+
+        return $this;
+    }
+
+    /**
+     * Set if empty rows should be preserved.
+     *
+     * @param  bool $preserve
+     * @return $this
+     */
+    public function preserveEmptyRows(bool $preserve): self
+    {
+        $this->library->preserveEmptyRows($preserve);
 
         return $this;
     }
