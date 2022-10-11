@@ -40,4 +40,4 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 - [Fabio Cagliero](https://github.com/fab120)
 
 ## License
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
