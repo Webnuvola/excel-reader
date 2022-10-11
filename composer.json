@@ -1,6 +1,6 @@
 {
     "name": "webnuvola/excel-reader",
-    "description": "Read spreadsheet files (CSV, XLSX and ODS) using box/spout and return data in array format",
+    "description": "Read spreadsheet files (CSV, XLSX and ODS) using OpenSpout and return data in array format",
     "keywords": [
         "excel",
         "phpexcel",
@@ -19,9 +19,9 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
-        "box/spout": "^2.7|^3.0",
-        "cocur/slugify": "^4.0"
+        "php": "~7.4.0 || ~8.0.0 || ~8.1.0",
+        "cocur/slugify": "^4.0",
+        "openspout/openspout": "^3.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5"
