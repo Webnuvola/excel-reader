@@ -2,11 +2,11 @@
 
 namespace Webnuvola\ExcelReader\Libraries;
 
-use Box\Spout\Reader\ReaderFactory;
+use OpenSpout\Common\Entity\Cell;
+use OpenSpout\Reader\Common\Creator\ReaderFactory;
 use Cocur\Slugify\Slugify;
-use Exception;
 
-class BoxSpout2Library extends Library implements LibraryInterface
+class OpenSpout3Library extends Library implements LibraryInterface
 {
     /**
      * Read the file and return data from selected sheet.
@@ -16,15 +16,14 @@ class BoxSpout2Library extends Library implements LibraryInterface
      * @param  int|string $sheetId
      * @return array
      *
-     * @throws \Box\Spout\Common\Exception\IOException
-     * @throws \Box\Spout\Common\Exception\UnsupportedTypeException
-     * @throws \Box\Spout\Reader\Exception\ReaderNotOpenedException
+     * @throws \OpenSpout\Common\Exception\IOException
+     * @throws \OpenSpout\Common\Exception\UnsupportedTypeException
+     * @throws \OpenSpout\Reader\Exception\ReaderNotOpenedException
      */
     public function read(string $path, bool $hasHeaders, $sheetId): array
     {
-        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-
-        $reader = ReaderFactory::create($extension);
+        $reader = ReaderFactory::createFromFile($path);
+        $reader->setShouldPreserveEmptyRows($this->preserveEmptyRows);
         $reader->open($path);
 
         $function = is_int($sheetId) ? 'getIndex' : 'getName';
@@ -38,13 +37,12 @@ class BoxSpout2Library extends Library implements LibraryInterface
         $slugify = $hasHeaders ? new Slugify($this->slugifySettings) : null;
         $skipped = 0;
 
-        /** @var \Box\Spout\Reader\SheetInterface $sheet */
         foreach ($reader->getSheetIterator() as $sheet) {
             if ($sheet->$function() !== $sheetId) {
                 continue;
             }
 
-            /** @var array $row */
+            /** @var \OpenSpout\Common\Entity\Row $row */
             foreach ($sheet->getRowIterator() as $row) {
                 if ($skipped < $this->skip) {
                     $skipped++;
@@ -52,7 +50,10 @@ class BoxSpout2Library extends Library implements LibraryInterface
                 }
 
                 if ($first) {
-                    $headers = array_map(static fn ($cell) => $slugify->slugify($cell), $row);
+                    $headers = array_map(
+                        static fn (Cell $cell) => $slugify->slugify($cell->getValue()),
+                        $row->getCells(),
+                    );
 
                     $headersCount = count($headers);
                     $filler = array_fill(0, $headersCount, null);
@@ -61,7 +62,10 @@ class BoxSpout2Library extends Library implements LibraryInterface
                     continue;
                 }
 
-                $currentData = $row + $filler;
+                $currentData = array_map(
+                        static fn (Cell $cell) => $cell->getValue(),
+                        $row->getCells(),
+                    ) + $filler;
 
                 if ($hasHeaders && count($currentData) > $headersCount) {
                     $currentData = array_slice($currentData, 0, $headersCount);
@@ -87,16 +91,6 @@ class BoxSpout2Library extends Library implements LibraryInterface
      */
     public function version(): int
     {
-        return 2;
-    }
-
-    /**
-     * Set if empty rows should be preserved.
-     *
-     * @param  bool $preserve
-     */
-    public function preserveEmptyRows(bool $preserve): void
-    {
-        throw new Exception('preserveEmptyRows is supported only in box/spout:^3.0');
+        return 3;
     }
 }

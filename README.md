@@ -26,6 +26,11 @@ $excel = \Webnuvola\ExcelReader\ExcelReader::createFromString($content, 'xlsx')
 composer test
 ```
 
+## Upgrade Guide
+
+### From `v1` to `v2`
+Library `box/spout` is replaced with `openspout/openspout`, there are no breaking changes.
+
 ## Changelog
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 

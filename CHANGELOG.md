@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to `excel-reader` will be documented in this file.
 
+## v2.0.0 - 2022-10-11
+- Composer: remove `box/spout`, require `openspout/openspout`, update php version
+- Add OpenSpout3 library
+- Run test workflow: do not exclude `prefer-lowest` on `php 8.0`, add `php 8.1`
+- Add upgrade guide to `README.md`
+
 ## v1.3.0 - 2021-10-22
 - Add `skip` method to define how many rows should be skipped
 - Add `preserveEmptyRows` method to define if empty rows should be preserved or not (compatible only with box/spout:^3.0)
