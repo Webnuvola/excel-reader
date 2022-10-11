@@ -3,7 +3,7 @@
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/webnuvola/excel-reader/Tests?label=tests)](https://github.com/webnuvola/excel-reader/actions?query=workflow%3ATests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/webnuvola/excel-reader.svg?style=flat-square)](https://packagist.org/packages/webnuvola/excel-reader)
 
-Read spreadsheet files (CSV, XLSX and ODS) using box/spout and return data in array format.
+Read spreadsheet files (CSV, XLSX and ODS) using `openspout/openspout` and return data in array format.
 
 ## Installation
 You can install the package via composer:
