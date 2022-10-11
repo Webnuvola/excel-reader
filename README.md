@@ -31,6 +31,8 @@ composer test
 ### From `v1` to `v2`
 Library `box/spout` is replaced with `openspout/openspout`, there are no breaking changes.
 
+If you are using `box/spout` outside this library, please refer to [`openspout/openspout` upgrade guide](https://github.com/openspout/openspout/#upgrade-from-boxspoutv3-to-openspoutopenspoutv3).
+
 ## Changelog
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
