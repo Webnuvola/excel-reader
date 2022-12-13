@@ -55,19 +55,6 @@ final class ExcelReader
     }
 
     /**
-     * Create ExcelReader from file.
-     *
-     * @param  string $path
-     * @return static
-     *
-     * @deprecated Use createFromPath instead
-     */
-    public static function createFromFile(string $path): self
-    {
-        return self::createFromPath($path);
-    }
-
-    /**
      * Create ExcelReader from path.
      *
      * @param  string $path
@@ -197,7 +184,7 @@ final class ExcelReader
     public function read(): array
     {
         if (! isset($this->data[$this->sheet])) {
-            $this->data[$this->sheet] = $this->library->read($this->file->getPath(), $this->headers, $this->sheet);
+            $this->data[$this->sheet] = $this->library->read($this->file, $this->headers, $this->sheet);
         }
 
         return $this->data[$this->sheet];

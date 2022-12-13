@@ -2,9 +2,9 @@
 
 namespace Webnuvola\ExcelReader;
 
-use OpenSpout\Reader\Common\Creator\ReaderFactory as OpenSpout3ReaderFactory;
+use OpenSpout\Reader\Common\Creator\ReaderFactory as OpenSpout4ReaderFactory;
 use Webnuvola\ExcelReader\Exceptions\LibraryNotFoundException;
-use Webnuvola\ExcelReader\Libraries\OpenSpout3Library;
+use Webnuvola\ExcelReader\Libraries\OpenSpout4Library;
 use Webnuvola\ExcelReader\Libraries\LibraryInterface;
 
 class ExcelReaderManager
@@ -18,8 +18,8 @@ class ExcelReaderManager
      */
     public static function resolve(): LibraryInterface
     {
-        if (class_exists(OpenSpout3ReaderFactory::class)) {
-            return new OpenSpout3Library();
+        if (class_exists(OpenSpout4ReaderFactory::class)) {
+            return new OpenSpout4Library();
         }
 
         throw new LibraryNotFoundException('Libray openspout/openspout not found');

@@ -30,4 +30,14 @@ class File implements FileInterface
     {
         return $this->path;
     }
+
+    /**
+     * Return file extension.
+     *
+     * @return string
+     */
+    public function getExtension(): string
+    {
+        return strtolower(pathinfo($this->path, PATHINFO_EXTENSION));
+    }
 }

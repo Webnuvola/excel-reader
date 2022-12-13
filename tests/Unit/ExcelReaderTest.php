@@ -6,7 +6,7 @@ use DateTime;
 use Exception;
 use Webnuvola\ExcelReader\ExcelReader;
 use Webnuvola\ExcelReader\ExcelReaderManager;
-use Webnuvola\ExcelReader\Libraries\OpenSpout3Library;
+use Webnuvola\ExcelReader\Libraries\OpenSpout4Library;
 use Webnuvola\ExcelReader\Tests\TestCase;
 
 class ExcelReaderTest extends TestCase
@@ -19,8 +19,8 @@ class ExcelReaderTest extends TestCase
     {
         $library = ExcelReaderManager::resolve();
 
-        if ($library instanceof OpenSpout3Library) {
-            $this->setName('Library openspout/openspout:^3.4');
+        if ($library instanceof OpenSpout4Library) {
+            $this->setName('Library openspout/openspout 4');
         } else {
             $this->setName('Library not found');
             $this->markTestIncomplete('Library not found');

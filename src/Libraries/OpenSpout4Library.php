@@ -3,28 +3,35 @@
 namespace Webnuvola\ExcelReader\Libraries;
 
 use OpenSpout\Common\Entity\Cell;
-use OpenSpout\Reader\Common\Creator\ReaderFactory;
+use OpenSpout\Reader\AbstractReader;
 use Cocur\Slugify\Slugify;
+use OpenSpout\Reader\CSV\Reader as CSVReader;
+use OpenSpout\Reader\CSV\Options as CSVOptions;
+use OpenSpout\Reader\ODS\Reader as ODSReader;
+use OpenSpout\Reader\ODS\Options as ODSOptions;
+use OpenSpout\Reader\XLSX\Reader as XLSXReader;
+use OpenSpout\Reader\XLSX\Options as XLSXOptions;
+use Webnuvola\ExcelReader\Exceptions\UnsupportedTypeException;
+use Webnuvola\ExcelReader\File\FileInterface;
 
-class OpenSpout3Library extends Library implements LibraryInterface
+class OpenSpout4Library extends Library implements LibraryInterface
 {
     /**
      * Read the file and return data from selected sheet.
      *
-     * @param  string $path
+     * @param  \Webnuvola\ExcelReader\File\FileInterface $file
      * @param  bool $hasHeaders
      * @param  int|string $sheetId
      * @return array
      *
      * @throws \OpenSpout\Common\Exception\IOException
-     * @throws \OpenSpout\Common\Exception\UnsupportedTypeException
      * @throws \OpenSpout\Reader\Exception\ReaderNotOpenedException
+     * @throws \Webnuvola\ExcelReader\Exceptions\UnsupportedTypeException
      */
-    public function read(string $path, bool $hasHeaders, $sheetId): array
+    public function read(FileInterface $file, bool $hasHeaders, int|string $sheetId): array
     {
-        $reader = ReaderFactory::createFromFile($path);
-        $reader->setShouldPreserveEmptyRows($this->preserveEmptyRows);
-        $reader->open($path);
+        $reader = $this->createFromFile($file);
+        $reader->open($file->getPath());
 
         $function = is_int($sheetId) ? 'getIndex' : 'getName';
 
@@ -91,6 +98,46 @@ class OpenSpout3Library extends Library implements LibraryInterface
      */
     public function version(): int
     {
-        return 3;
+        return 4;
+    }
+
+    /**
+     * Return reader for current file.
+     *
+     * @param  \Webnuvola\ExcelReader\File\FileInterface $file
+     * @return \OpenSpout\Reader\AbstractReader
+     *
+     * @throws \Webnuvola\ExcelReader\Exceptions\UnsupportedTypeException
+     */
+    protected function createFromFile(FileInterface $file): AbstractReader
+    {
+        $optionClass = null;
+        $readerClass = null;
+
+        $extension = $file->getExtension();
+
+        if ($extension === 'csv') {
+            $optionClass = CSVOptions::class;
+            $readerClass = CSVReader::class;
+        }
+
+        if ($extension === 'ods') {
+            $optionClass = ODSOptions::class;
+            $readerClass = ODSReader::class;
+        }
+
+        if ($extension === 'xlsx') {
+            $optionClass = XLSXOptions::class;
+            $readerClass = XLSXReader::class;
+        }
+
+        if (! $optionClass || ! $readerClass) {
+            throw new UnsupportedTypeException("File extension {$extension} is not supported");
+        }
+
+        $options = new $optionClass();
+        $options->SHOULD_PRESERVE_EMPTY_ROWS = $this->preserveEmptyRows;
+
+        return new $readerClass($options);
     }
 }

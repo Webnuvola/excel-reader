@@ -10,4 +10,11 @@ interface FileInterface
      * @return string
      */
     public function getPath(): string;
+
+    /**
+     * Return file extension.
+     *
+     * @return string
+     */
+    public function getExtension(): string;
 }

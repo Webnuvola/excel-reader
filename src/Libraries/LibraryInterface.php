@@ -2,17 +2,19 @@
 
 namespace Webnuvola\ExcelReader\Libraries;
 
+use Webnuvola\ExcelReader\File\FileInterface;
+
 interface LibraryInterface
 {
     /**
      * Read the file and return data from selected sheet.
      *
-     * @param  string $path
+     * @param  \Webnuvola\ExcelReader\File\FileInterface $file
      * @param  bool $hasHeaders
      * @param  int|string $sheetId
      * @return array
      */
-    public function read(string $path, bool $hasHeaders, $sheetId): array;
+    public function read(FileInterface $file, bool $hasHeaders, int|string $sheetId): array;
 
     /**
      * Set slugify settings.

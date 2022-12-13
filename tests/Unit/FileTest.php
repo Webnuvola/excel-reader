@@ -28,11 +28,13 @@ class FileTest extends TestCase
     }
 
     /** @test */
-    public function get_file_path()
+    public function get_methods()
     {
         $file = FileFactory::createFromPath(__DIR__.'/../resources/financial.xlsx');
+
         $this->assertTrue(file_exists($file->getPath()));
         $this->assertEquals(realpath(__DIR__.'/../resources/financial.xlsx'), $file->getPath());
+        $this->assertEquals('xlsx', $file->getExtension());
     }
 
     /** @test */
