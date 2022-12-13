@@ -28,6 +28,11 @@ composer test
 
 ## Upgrade Guide
 
+### From `v2` to `v3`
+This version drops support for php 7.4 and adds support for php 8.2.
+
+The `openspout/openspout` library is updated to `^4.9`.
+
 ### From `v1` to `v2`
 Library `box/spout` is replaced with `openspout/openspout`, there are no breaking changes.
 

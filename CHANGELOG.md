@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to `excel-reader` will be documented in this file.
 
+## v3.0.0 - 2022-12-13
+- Composer: require `openspout/openspout:^4.9`
+- PHP supported versions are `8.0`, `8.1`, `8.2`
+
 ## v2.0.0 - 2022-10-11
 - Composer: remove `box/spout`, require `openspout/openspout`, update php version
 - Add OpenSpout3 library
