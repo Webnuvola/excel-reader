@@ -1,51 +1,32 @@
 <?php
 
-namespace Webnuvola\ExcelReader\Tests\Unit;
-
 use Webnuvola\ExcelReader\File\FileFactory;
 use Webnuvola\ExcelReader\File\FileInterface;
-use Webnuvola\ExcelReader\Tests\TestCase;
 
-class FileTest extends TestCase
-{
-    protected static string $excelContent;
+it('can create file interface instance', function () {
+    expect(FileFactory::createFromPath(__DIR__.'/../resources/financial.xlsx'))
+        ->toBeInstanceOf(FileInterface::class)
+        ->and(FileFactory::createFromString(financialFile(), 'xlsx'))
+        ->toBeInstanceOf(FileInterface::class);
+});
 
-    public static function setUpBeforeClass(): void
-    {
-        $fp = fopen(__DIR__.'/../resources/financial.xlsx', 'rb');
-        self::$excelContent = stream_get_contents($fp);
-        fclose($fp);
-    }
+it('can get file info', function () {
+    $file = FileFactory::createFromPath(__DIR__.'/../resources/financial.xlsx');
 
-    /** @test */
-    public function create_file_interface_instance()
-    {
-        $file = FileFactory::createFromPath(__DIR__.'/../resources/financial.xlsx');
-        $this->assertInstanceOf(FileInterface::class, $file);
+    expect($file->getPath())
+        ->toBeReadableFile()
+        ->and($file->getPath())->toBe(realpath(__DIR__.'/../resources/financial.xlsx'))
+        ->and($file->getExtension())->toBe('xlsx');
+});
 
-        $file = FileFactory::createFromString(self::$excelContent, 'xlsx');
-        $this->assertInstanceOf(FileInterface::class, $file);
-    }
+test('temporary file is deleted', function () {
+    $file = FileFactory::createFromString(financialFile(), 'xlsx');
 
-    /** @test */
-    public function get_methods()
-    {
-        $file = FileFactory::createFromPath(__DIR__.'/../resources/financial.xlsx');
+    $path = $file->getPath();
 
-        $this->assertTrue(file_exists($file->getPath()));
-        $this->assertEquals(realpath(__DIR__.'/../resources/financial.xlsx'), $file->getPath());
-        $this->assertEquals('xlsx', $file->getExtension());
-    }
+    expect($path)->toBeReadableFile();
 
-    /** @test */
-    public function temporary_file_is_deleted()
-    {
-        $file = FileFactory::createFromString(self::$excelContent, 'xlsx');
+    unset($file);
 
-        $path = $file->getPath();
-        $this->assertFileExists($path);
-
-        unset($file);
-        $this->assertFileDoesNotExist($path);
-    }
-}
+    expect($path)->not->toBeReadableFile();
+});

@@ -2,9 +2,9 @@
 
 namespace Webnuvola\ExcelReader\Tests;
 
-use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
-class TestCase extends PHPUnitTestCase
+abstract class TestCase extends BaseTestCase
 {
     //
 }
