@@ -3,7 +3,7 @@ All notable changes to `excel-reader` will be documented in this file.
 
 ## v3.1.0 - 2024-01-01
 - Remove PHP 7.4 and 8.0 support
-- PHP 8.3 support
+- Add PHP 8.3 support
 - Upgrade Composer dependencies
 - Migrate tests to Pest
 

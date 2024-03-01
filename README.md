@@ -1,6 +1,6 @@
 # Excel Reader
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/webnuvola/excel-reader.svg?style=flat-square)](https://packagist.org/packages/webnuvola/excel-reader)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/webnuvola/excel-reader/Tests?label=tests)](https://github.com/webnuvola/excel-reader/actions?query=workflow%3ATests+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/Webnuvola/excel-reader/run-tests.yml?branch=main)](https://github.com/webnuvola/excel-reader/actions?query=workflow%3ATests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/webnuvola/excel-reader.svg?style=flat-square)](https://packagist.org/packages/webnuvola/excel-reader)
 
 Read spreadsheet files (CSV, XLSX and ODS) using `openspout/openspout` and return data in array format.
