@@ -2,12 +2,13 @@
 All notable changes to `excel-reader` will be documented in this file.
 
 ## v3.2.0 - 2024-10-21
+- Drop support for PHP 8.1
 - Use computed value when cell type is `FormulaCell`
 - Use `pestphp/pest:^3.0`
 
 ## v3.1.0 - 2024-01-01
-- Remove PHP 7.4 and 8.0 support
-- Add PHP 8.3 support
+- Drop support for PHP 7.4 and 8.0
+- Add support for PHP 8.3
 - Upgrade Composer dependencies
 - Migrate tests to Pest
 
