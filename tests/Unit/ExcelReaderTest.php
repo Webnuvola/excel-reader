@@ -133,6 +133,20 @@ it('can read malformed table without headers', function () {
         ]);
 });
 
+it('can read file with formulas', function () {
+    $excel = ExcelReader::createFromPath(__DIR__.'/../resources/formula.xlsx')
+        ->withoutHeaders()
+        ->read();
+
+    expect($excel)
+        ->toBe([
+            [1, 3, 'ODD'],
+            [2, 6, 'EVEN'],
+            [3, 9, 'ODD'],
+            [4, 12, 'EVEN'],
+        ]);
+});
+
 it('can skip rows', function () {
     $excel = ExcelReader::createFromPath(__DIR__.'/../resources/skip.xlsx')
         ->skip(3)

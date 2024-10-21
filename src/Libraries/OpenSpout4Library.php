@@ -2,15 +2,16 @@
 
 namespace Webnuvola\ExcelReader\Libraries;
 
-use OpenSpout\Common\Entity\Cell;
-use OpenSpout\Reader\AbstractReader;
 use Cocur\Slugify\Slugify;
-use OpenSpout\Reader\CSV\Reader as CSVReader;
+use OpenSpout\Common\Entity\Cell;
+use OpenSpout\Common\Entity\Cell\FormulaCell;
+use OpenSpout\Reader\AbstractReader;
 use OpenSpout\Reader\CSV\Options as CSVOptions;
-use OpenSpout\Reader\ODS\Reader as ODSReader;
+use OpenSpout\Reader\CSV\Reader as CSVReader;
 use OpenSpout\Reader\ODS\Options as ODSOptions;
-use OpenSpout\Reader\XLSX\Reader as XLSXReader;
+use OpenSpout\Reader\ODS\Reader as ODSReader;
 use OpenSpout\Reader\XLSX\Options as XLSXOptions;
+use OpenSpout\Reader\XLSX\Reader as XLSXReader;
 use Webnuvola\ExcelReader\Exceptions\UnsupportedTypeException;
 use Webnuvola\ExcelReader\File\FileInterface;
 
@@ -58,7 +59,7 @@ class OpenSpout4Library extends Library implements LibraryInterface
 
                 if ($first) {
                     $headers = array_map(
-                        static fn (Cell $cell) => $slugify->slugify($cell->getValue()),
+                        fn (Cell $cell) => $slugify->slugify($this->getCellValue($cell)),
                         $row->getCells(),
                     );
 
@@ -70,7 +71,7 @@ class OpenSpout4Library extends Library implements LibraryInterface
                 }
 
                 $currentData = array_map(
-                        static fn (Cell $cell) => $cell->getValue(),
+                        fn (Cell $cell) => $this->getCellValue($cell),
                         $row->getCells(),
                     ) + $filler;
 
@@ -139,5 +140,17 @@ class OpenSpout4Library extends Library implements LibraryInterface
         $options->SHOULD_PRESERVE_EMPTY_ROWS = $this->preserveEmptyRows;
 
         return new $readerClass($options);
+    }
+
+    /**
+     * Return the cell value or the computed value if the cell contains a formula.
+     */
+    protected function getCellValue(Cell $cell): mixed
+    {
+        if ($cell instanceof FormulaCell) {
+            return $cell->getComputedValue();
+        }
+
+        return $cell->getValue();
     }
 }
